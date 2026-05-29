@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI科普及个人/公司应用场景</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stage-bg: #080808;
+            --slide-bg: #171717;
+            --ink: #171717;
+            --cream: #fff5e8;
+            --muted: #a6a09a;
+            --dim: rgba(255, 245, 232, 0.16);
+            --dim-2: rgba(255, 245, 232, 0.08);
+            --orange: #ff5a1f;
+            --yellow: #ffc933;
+            --cyan: #4fd1c5;
+            --green: #77d67a;
+            --red: #ff4d4d;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--slide-bg, #fff);
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--slide-bg, #fff);
+        }
+
+        .slide.active,
+        .slide.visible {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+        }
+
+        img,
+        video,
+        canvas,
+        svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .deck-controls {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.58);
+            color: white;
+            font: 500 14px/1 "Space Grotesk", sans-serif;
+            backdrop-filter: blur(12px);
+        }
+
+        .section-tabs {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            padding: 9px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.48);
+            color: rgba(255, 245, 232, 0.58);
+            font: 800 13px/1 "Noto Sans SC", "Space Grotesk", sans-serif;
+            backdrop-filter: blur(14px);
+        }
+
+        .section-tab {
+            border: 0;
+            border-radius: 999px;
+            padding: 9px 14px;
+            color: inherit;
+            background: transparent;
+            font: inherit;
+            cursor: pointer;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .section-tab.active {
+            color: var(--ink);
+            background: var(--orange);
+        }
+
+        .dot-nav {
+            position: fixed;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: grid;
+            gap: 8px;
+            padding: 12px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.46);
+            backdrop-filter: blur(14px);
+        }
+
+        .dot-nav button {
+            width: 10px;
+            height: 10px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 245, 232, 0.34);
+            cursor: pointer;
+            padding: 0;
+            transition:
+                transform 0.18s ease,
+                background 0.18s ease,
+                box-shadow 0.18s ease;
+        }
+
+        .dot-nav button:hover,
+        .dot-nav button.active {
+            background: var(--orange);
+            transform: scale(1.45);
+            box-shadow: 0 0 0 5px rgba(255, 90, 31, 0.16);
+        }
+
+        .deck-controls button,
+        .edit-toggle,
+        .export-button {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            padding: 8px 13px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .progress-track {
+            width: 180px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            background: var(--orange);
+            transition: width 0.25s ease;
+        }
+
+        @media print {
+            html,
+            body {
+                width: 1920px;
+                height: auto;
+                overflow: visible;
+                background: #fff;
+            }
+
+            .deck-viewport {
+                position: static;
+                overflow: visible;
+                background: #fff;
+            }
+
+            .deck-stage {
+                position: static;
+                width: auto;
+                height: auto;
+                transform: none !important;
+                background: none;
+            }
+
+            .slide {
+                position: relative;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                width: 1920px;
+                height: 1080px;
+                break-after: page;
+                page-break-after: always;
+            }
+
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+
+            .deck-controls,
+            .section-tabs,
+            .dot-nav,
+            .edit-hotzone,
+            .edit-toggle,
+            .export-button {
+                display: none !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+
+        body {
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+            color: var(--cream);
+        }
+
+        .slide {
+            background:
+                radial-gradient(circle at 78% 22%, rgba(255, 90, 31, 0.26), transparent 26%),
+                radial-gradient(circle at 12% 80%, rgba(255, 201, 51, 0.10), transparent 24%),
+                linear-gradient(135deg, #191919 0%, #2b2b2b 44%, #101010 100%);
+        }
+
+        .slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 245, 232, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 245, 232, 0.035) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: linear-gradient(to bottom, black, transparent 82%);
+        }
+
+        .kicker {
+            position: absolute;
+            top: 64px;
+            left: 76px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0;
+            color: rgba(255, 245, 232, 0.62);
+            text-transform: uppercase;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 46px;
+            right: 76px;
+            font-family: "Archivo Black", "Noto Sans SC", sans-serif;
+            font-size: 94px;
+            color: rgba(255, 245, 232, 0.12);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: "Noto Sans SC", "Archivo Black", sans-serif;
+            letter-spacing: 0;
+        }
+
+        h1 {
+            font-size: 104px;
+            line-height: 1.08;
+            font-weight: 900;
+        }
+
+        h2 {
+            font-size: 82px;
+            line-height: 1.12;
+            font-weight: 900;
+        }
+
+        h3 {
+            font-size: 42px;
+            line-height: 1.18;
+            font-weight: 800;
+        }
+
+        p,
+        li {
+            font-size: 32px;
+            line-height: 1.42;
+            font-weight: 500;
+            color: rgba(255, 245, 232, 0.78);
+        }
+
+        .accent { color: var(--orange); }
+        .yellow { color: var(--yellow); }
+        .cyan { color: var(--cyan); }
+        .green { color: var(--green); }
+
+        .title-card {
+            position: absolute;
+            left: 76px;
+            bottom: 76px;
+            width: 790px;
+            height: 610px;
+            background: var(--orange);
+            color: var(--ink);
+            padding: 54px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .title-card h1 {
+            color: var(--ink);
+            font-family: "Archivo Black", "Noto Sans SC", sans-serif;
+            font-size: 82px;
+            line-height: 1;
+        }
+
+        .title-card p {
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        .hero-title {
+            position: absolute;
+            left: 950px;
+            top: 248px;
+            width: 780px;
+        }
+
+        .hero-copy {
+            position: absolute;
+            left: 956px;
+            top: 610px;
+            width: 640px;
+        }
+
+        .content {
+            position: absolute;
+            left: 132px;
+            top: 185px;
+            right: 132px;
+            bottom: 115px;
+        }
+
+        .content.wide {
+            left: 92px;
+            right: 92px;
+        }
+
+        .lead {
+            margin-top: 32px;
+            width: 960px;
+            font-size: 38px;
+            color: rgba(255, 245, 232, 0.78);
+        }
+
+        .big-statement {
+            position: absolute;
+            left: 132px;
+            top: 230px;
+            width: 1180px;
+            font-size: 104px;
+            line-height: 1.08;
+            font-family: "Noto Sans SC", sans-serif;
+            font-weight: 900;
+        }
+
+        .statement-note {
+            position: absolute;
+            left: 136px;
+            bottom: 160px;
+            width: 720px;
+            font-size: 34px;
+        }
+
+        .orange-panel {
+            position: absolute;
+            right: 96px;
+            bottom: 96px;
+            width: 520px;
+            min-height: 440px;
+            background: var(--orange);
+            color: var(--ink);
+            padding: 42px;
+        }
+
+        .orange-panel h3,
+        .orange-panel p,
+        .orange-panel li {
+            color: var(--ink);
+        }
+
+        .orange-panel h3 {
+            font-size: 48px;
+            margin-bottom: 28px;
+        }
+
+        .orange-panel p,
+        .orange-panel li {
+            font-size: 29px;
+            line-height: 1.36;
+            font-weight: 800;
+        }
+
+        .three-grid,
+        .four-grid {
+            display: grid;
+            gap: 28px;
+            margin-top: 58px;
+        }
+
+        .three-grid { grid-template-columns: repeat(3, 1fr); }
+        .four-grid { grid-template-columns: repeat(4, 1fr); }
+
+        .tile {
+            min-height: 360px;
+            border: 1px solid rgba(255, 245, 232, 0.17);
+            background: rgba(255, 245, 232, 0.06);
+            padding: 34px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tile[data-jump-slide] {
+            cursor: pointer;
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .tile[data-jump-slide]:hover,
+        .tile[data-jump-slide]:focus {
+            border-color: rgba(255, 90, 31, 0.86);
+            background: rgba(255, 90, 31, 0.12);
+            box-shadow: 0 0 0 1px rgba(255, 90, 31, 0.28), 0 22px 60px rgba(0, 0, 0, 0.28);
+            transform: translateY(-8px);
+            outline: none;
+        }
+
+        .tile[data-jump-slide]::before {
+            content: "点击跳转";
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            z-index: 1;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 90, 31, 0.16);
+            color: var(--orange);
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 900;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .tile[data-jump-slide]:hover::before,
+        .tile[data-jump-slide]:focus::before {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-to-map {
+            position: absolute;
+            right: 132px;
+            bottom: 114px;
+            z-index: 5;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 90, 31, 0.58);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.28);
+            color: var(--orange);
+            padding: 14px 20px;
+            font-size: 22px;
+            line-height: 1;
+            font-weight: 900;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .back-to-map::before {
+            content: "↩";
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .back-to-map:hover,
+        .back-to-map:focus {
+            background: rgba(255, 90, 31, 0.14);
+            box-shadow: 0 0 0 5px rgba(255, 90, 31, 0.12);
+            transform: translateY(-3px);
+            outline: none;
+        }
+
+        .tile::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            right: -38px;
+            bottom: -38px;
+            background: var(--orange);
+            opacity: 0.18;
+            border-radius: 50%;
+        }
+
+        .tile .tag {
+            display: inline-block;
+            margin-bottom: 52px;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--orange);
+            text-transform: uppercase;
+        }
+
+        .tile h3 { margin-bottom: 22px; }
+
+        .tile p {
+            font-size: 28px;
+            color: rgba(255, 245, 232, 0.68);
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 0.92fr 1.08fr;
+            gap: 58px;
+            height: 100%;
+            align-items: center;
+        }
+
+        .split.reverse { grid-template-columns: 1.08fr 0.92fr; }
+
+        .list {
+            display: grid;
+            gap: 22px;
+        }
+
+        .list-item {
+            border-left: 8px solid var(--orange);
+            padding: 20px 28px;
+            background: rgba(255, 245, 232, 0.06);
+        }
+
+        .list-item strong {
+            display: block;
+            font-size: 34px;
+            color: var(--cream);
+            margin-bottom: 8px;
+        }
+
+        .list-item span {
+            display: block;
+            font-size: 27px;
+            line-height: 1.36;
+            color: rgba(255, 245, 232, 0.66);
+            font-weight: 500;
+        }
+
+        .metric {
+            display: grid;
+            place-items: center;
+            min-height: 560px;
+            border: 1px solid rgba(255, 245, 232, 0.16);
+            background: rgba(0, 0, 0, 0.18);
+            position: relative;
+        }
+
+        .metric::before {
+            content: "";
+            width: 430px;
+            height: 430px;
+            border: 3px solid rgba(255, 90, 31, 0.72);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .metric strong {
+            position: relative;
+            z-index: 1;
+            font-family: "Archivo Black", "Noto Sans SC", sans-serif;
+            font-size: 148px;
+            color: var(--orange);
+        }
+
+        .metric span {
+            position: relative;
+            z-index: 1;
+            margin-top: -88px;
+            font-size: 34px;
+            color: var(--cream);
+            font-weight: 800;
+        }
+
+        .ladder {
+            margin-top: 56px;
+            display: grid;
+            gap: 20px;
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            align-items: center;
+            min-height: 100px;
+            background: rgba(255, 245, 232, 0.06);
+            border: 1px solid rgba(255, 245, 232, 0.12);
+        }
+
+        .step b {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            background: var(--orange);
+            color: var(--ink);
+            font-family: "Archivo Black", sans-serif;
+            font-size: 40px;
+        }
+
+        .step span {
+            padding: 0 32px;
+            font-size: 31px;
+            color: rgba(255, 245, 232, 0.8);
+            font-weight: 700;
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: 310px repeat(3, 1fr);
+            grid-auto-rows: 142px;
+            margin-top: 52px;
+            border: 1px solid rgba(255, 245, 232, 0.16);
+        }
+
+        .cell {
+            border-right: 1px solid rgba(255, 245, 232, 0.13);
+            border-bottom: 1px solid rgba(255, 245, 232, 0.13);
+            padding: 26px;
+            font-size: 29px;
+            line-height: 1.28;
+            font-weight: 700;
+            color: rgba(255, 245, 232, 0.74);
+            display: flex;
+            align-items: center;
+        }
+
+        .cell.head,
+        .cell.side {
+            background: rgba(255, 90, 31, 0.18);
+            color: var(--cream);
+            font-weight: 900;
+        }
+
+        .roadmap {
+            position: relative;
+            margin-top: 82px;
+            height: 430px;
+        }
+
+        .roadmap::before {
+            content: "";
+            position: absolute;
+            left: 110px;
+            right: 110px;
+            top: 214px;
+            height: 8px;
+            background: var(--orange);
+        }
+
+        .milestone {
+            position: absolute;
+            width: 310px;
+            min-height: 280px;
+            padding: 28px;
+            background: rgba(255, 245, 232, 0.07);
+            border: 1px solid rgba(255, 245, 232, 0.18);
+        }
+
+        .milestone:nth-child(1) { left: 0; top: 0; }
+        .milestone:nth-child(2) { left: 410px; bottom: 0; }
+        .milestone:nth-child(3) { left: 820px; top: 0; }
+        .milestone:nth-child(4) { right: 0; bottom: 0; }
+
+        .milestone b {
+            display: block;
+            font-family: "Archivo Black", sans-serif;
+            font-size: 48px;
+            color: var(--orange);
+            margin-bottom: 22px;
+        }
+
+        .milestone span {
+            display: block;
+            font-size: 29px;
+            line-height: 1.34;
+            font-weight: 700;
+            color: rgba(255, 245, 232, 0.82);
+        }
+
+        .risk-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 26px;
+            margin-top: 54px;
+        }
+
+        .risk {
+            border: 1px solid rgba(255, 245, 232, 0.16);
+            background: rgba(255, 245, 232, 0.06);
+            min-height: 190px;
+            padding: 30px;
+        }
+
+        .risk b {
+            display: block;
+            color: var(--orange);
+            font-size: 30px;
+            margin-bottom: 14px;
+        }
+
+        .risk span {
+            display: block;
+            color: rgba(255, 245, 232, 0.72);
+            font-size: 27px;
+            line-height: 1.35;
+            font-weight: 500;
+        }
+
+        .final-word {
+            position: absolute;
+            left: 132px;
+            top: 238px;
+            width: 1350px;
+            font-family: "Noto Sans SC", sans-serif;
+            font-size: 118px;
+            line-height: 1.1;
+            font-weight: 900;
+        }
+
+        .final-word span {
+            color: var(--orange);
+        }
+
+        .speaker-note {
+            position: absolute;
+            left: 132px;
+            bottom: 110px;
+            width: 980px;
+            font-size: 32px;
+            color: rgba(255, 245, 232, 0.64);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(42px);
+            transition:
+                opacity 0.72s var(--ease),
+                transform 0.72s var(--ease);
+        }
+
+        .visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .visible .reveal:nth-child(2) { transition-delay: 0.08s; }
+        .visible .reveal:nth-child(3) { transition-delay: 0.16s; }
+        .visible .reveal:nth-child(4) { transition-delay: 0.24s; }
+        .visible .reveal:nth-child(5) { transition-delay: 0.32s; }
+        .visible .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+        [contenteditable="true"] {
+            outline: 3px solid rgba(255, 90, 31, 0.7);
+            outline-offset: 6px;
+            cursor: text;
+        }
+
+        .edit-hotzone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 90px;
+            height: 90px;
+            z-index: 10000;
+        }
+
+        .edit-toggle,
+        .export-button {
+            position: fixed;
+            left: 18px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.68);
+            backdrop-filter: blur(12px);
+        }
+
+        .edit-toggle { top: 18px; }
+        .export-button { top: 62px; }
+
+        .edit-toggle.show,
+        .edit-toggle.active,
+        .export-button.show,
+        .export-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-viewport">
+        <main class="deck-stage" id="deckStage">
+            <section class="slide active">
+                <div class="slide-number reveal">01</div>
+                <div class="title-card reveal">
+                    <h1>AI<br>不是工具清单</h1>
+                    <p>它是一套新的经营杠杆：更快理解、更快生产、更快试错。</p>
+                </div>
+                <h1 class="hero-title reveal">向公司老板做 AI 科普及个人/公司应用场景</h1>
+                <p class="hero-copy reveal">从个人效率到公司流程，从试点项目到组织能力，用一场演示把 AI 讲成可决策的事。</p>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Opening Frame</div>
+                <div class="slide-number reveal">02</div>
+                <div class="big-statement reveal">今天不讨论“AI 会不会火”。<br>我们讨论：<span class="accent">公司应该怎么用。</span></div>
+                <p class="statement-note reveal">老板真正需要的不是新名词，而是判断标准、投入边界和第一批可落地场景。</p>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">One Sentence</div>
+                <div class="slide-number reveal">03</div>
+                <div class="content">
+                    <h2 class="reveal">一句话理解 AI</h2>
+                    <p class="lead reveal">AI 是一种“可被调用的认知能力”：它能阅读、总结、生成、推理、改写、分类、写代码，也能连接业务工具完成任务。</p>
+                    <div class="three-grid">
+                        <div class="tile reveal"><span class="tag">Understand</span><h3>理解信息</h3><p>快速读懂材料、客户反馈、会议纪要、行业报告。</p></div>
+                        <div class="tile reveal"><span class="tag">Generate</span><h3>生成内容</h3><p>写方案、写文案、做提纲、产出初稿和多版本表达。</p></div>
+                        <div class="tile reveal"><span class="tag">Act</span><h3>执行任务</h3><p>调用工具、整理数据、触发流程，成为半自动协作节点。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Why Now</div>
+                <div class="slide-number reveal">04</div>
+                <div class="content">
+                    <h2 class="reveal">为什么现在必须看 AI</h2>
+                    <div class="split">
+                        <div>
+                            <p class="lead reveal">过去的软件帮人记录和管理；现在的 AI 开始帮人判断和生产。差别不是效率小幅提升，而是工作方式重排。</p>
+                        </div>
+                        <div class="list">
+                            <div class="list-item reveal"><strong>门槛下降</strong><span>自然语言就能驱动复杂任务，非技术岗位也能直接使用。</span></div>
+                            <div class="list-item reveal"><strong>成本下降</strong><span>试点不再需要大型系统改造，小团队即可验证价值。</span></div>
+                            <div class="list-item reveal"><strong>能力上升</strong><span>从写作扩展到数据、代码、流程、客服和运营。</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Executive Lens</div>
+                <div class="slide-number reveal">05</div>
+                <div class="content wide">
+                    <h2 class="reveal">老板看 AI，要看三件事</h2>
+                    <div class="three-grid">
+                        <div class="tile reveal"><span class="tag">01</span><h3>降本</h3><p>重复劳动、内容初稿、信息整理、客服问答、报表分析。</p></div>
+                        <div class="tile reveal"><span class="tag">02</span><h3>增效</h3><p>方案产出更快，跨部门沟通更清楚，决策材料更及时。</p></div>
+                        <div class="tile reveal"><span class="tag">03</span><h3>增长</h3><p>更快测试营销打法，更好理解客户，更低成本形成新服务。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Mental Model</div>
+                <div class="slide-number reveal">06</div>
+                <div class="content">
+                    <h2 class="reveal">把 AI 放在组织里的位置</h2>
+                    <div class="split reverse">
+                        <div class="metric reveal"><strong>3x</strong><span>认知带宽</span></div>
+                        <div class="list">
+                            <div class="list-item reveal"><strong>不是替代所有人</strong><span>先替代“低判断、高重复”的任务片段。</span></div>
+                            <div class="list-item reveal"><strong>不是增加一个系统</strong><span>更像给现有岗位加一个随叫随到的助手。</span></div>
+                            <div class="list-item reveal"><strong>不是一次性项目</strong><span>它会变成长期的岗位能力和流程能力。</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Personal Use</div>
+                <div class="slide-number reveal">07</div>
+                <div class="content">
+                    <h2 class="reveal">个人使用场景：先从每天都痛的事开始</h2>
+                    <div class="four-grid">
+                        <div class="tile reveal"><span class="tag">Meetings</span><h3>会议前后</h3><p>准备议程、提炼纪要、拆分行动项。</p></div>
+                        <div class="tile reveal"><span class="tag">Writing</span><h3>文字输出</h3><p>邮件、方案、汇报、话术、复盘初稿。</p></div>
+                        <div class="tile reveal"><span class="tag">Research</span><h3>资料研究</h3><p>快速读材料，形成对比表和判断摘要。</p></div>
+                        <div class="tile reveal"><span class="tag">Thinking</span><h3>思考陪练</h3><p>让 AI 挑错、追问、补盲区、做反方。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Personal Workflow</div>
+                <div class="slide-number reveal">08</div>
+                <div class="content">
+                    <h2 class="reveal">一个高价值个人工作流</h2>
+                    <div class="ladder">
+                        <div class="step reveal"><b>1</b><span>把原始材料丢给 AI：会议记录、客户聊天、文档、网页。</span></div>
+                        <div class="step reveal"><b>2</b><span>要求它先做结构化：背景、问题、选项、风险、下一步。</span></div>
+                        <div class="step reveal"><b>3</b><span>让它生成 3 个版本：老板版、执行版、客户版。</span></div>
+                        <div class="step reveal"><b>4</b><span>人工做最后判断：删掉不准的，留下可用的。</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Company Use</div>
+                <div class="slide-number reveal">09</div>
+                <div class="content">
+                    <h2 class="reveal">公司应用场景：从“部门痛点”切入</h2>
+                    <p class="lead reveal">不要一开始做大平台。先找频繁、标准化、可复用、低风险的任务，让 AI 在真实业务中跑起来。</p>
+                    <div class="orange-panel reveal">
+                        <h3>优先级公式</h3>
+                        <p>频率高 × 人工耗时 × 输出标准明确 × 数据风险可控</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Scenario Map</div>
+                <div class="slide-number reveal">10</div>
+                <div class="content wide">
+                    <h2 class="reveal">六类公司级应用场景</h2>
+                    <div class="three-grid">
+                        <div class="tile reveal" data-jump-slide="10" tabindex="0" role="button" aria-label="跳转到销售支持详情页"><span class="tag">Sales</span><h3>销售支持</h3><p>客户画像、拜访准备、跟进邮件、竞品问答。</p></div>
+                        <div class="tile reveal" data-jump-slide="11" tabindex="0" role="button" aria-label="跳转到市场运营详情页"><span class="tag">Marketing</span><h3>市场运营</h3><p>内容选题、活动文案、渠道素材、A/B 创意。</p></div>
+                        <div class="tile reveal" data-jump-slide="12" tabindex="0" role="button" aria-label="跳转到客服服务详情页"><span class="tag">Service</span><h3>客服服务</h3><p>知识库问答、工单分类、投诉摘要、质检辅助。</p></div>
+                        <div class="tile reveal" data-jump-slide="19" tabindex="0" role="button" aria-label="跳转到人事行政相关页"><span class="tag">HR</span><h3>人事行政</h3><p>招聘 JD、面试题、制度问答、培训材料。</p></div>
+                        <div class="tile reveal" data-jump-slide="15" tabindex="0" role="button" aria-label="跳转到财务管理相关页"><span class="tag">Finance</span><h3>财务管理</h3><p>报销审核辅助、数据解释、经营分析初稿。</p></div>
+                        <div class="tile reveal" data-jump-slide="14" tabindex="0" role="button" aria-label="跳转到经营中台相关页"><span class="tag">Ops</span><h3>经营中台</h3><p>周报月报、项目复盘、流程 SOP、知识沉淀。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Sales Example</div>
+                <div class="slide-number reveal">11</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content">
+                    <h2 class="reveal">销售：让每次拜访更像“有准备的专家”</h2>
+                    <div class="split">
+                        <div class="list">
+                            <div class="list-item reveal"><strong>拜访前</strong><span>客户背景、行业变化、可能痛点、开场问题。</span></div>
+                            <div class="list-item reveal"><strong>拜访中</strong><span>实时记录重点，提醒遗漏问题和下一步承诺。</span></div>
+                            <div class="list-item reveal"><strong>拜访后</strong><span>生成跟进邮件、内部纪要、机会判断和推进计划。</span></div>
+                        </div>
+                        <div class="metric reveal"><strong>快</strong><span>准备成本下降</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Marketing Example</div>
+                <div class="slide-number reveal">12</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content">
+                    <h2 class="reveal">市场：把创意生产变成可迭代流程</h2>
+                    <p class="lead reveal">AI 最适合做第一轮发散和版本改写，让团队把精力放在判断、选择和投放反馈上。</p>
+                    <div class="ladder">
+                        <div class="step reveal"><b>A</b><span>同一产品卖点，生成不同人群和渠道的表达。</span></div>
+                        <div class="step reveal"><b>B</b><span>把长内容拆成短视频脚本、海报文案、朋友圈素材。</span></div>
+                        <div class="step reveal"><b>C</b><span>根据投放数据复盘“为什么有效、下一轮怎么改”。</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Service Example</div>
+                <div class="slide-number reveal">13</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content">
+                    <h2 class="reveal">客服：先做辅助，再做自动化</h2>
+                    <div class="three-grid">
+                        <div class="tile reveal"><span class="tag">Assist</span><h3>答案推荐</h3><p>根据客户问题，从知识库推荐标准答案。</p></div>
+                        <div class="tile reveal"><span class="tag">Summarize</span><h3>工单摘要</h3><p>自动提炼问题、情绪、处理状态和升级原因。</p></div>
+                        <div class="tile reveal"><span class="tag">Improve</span><h3>质检复盘</h3><p>发现高频问题，反推产品、流程和话术优化。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Knowledge Base</div>
+                <div class="slide-number reveal">14</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content">
+                    <h2 class="reveal">公司知识库：让经验不再只在老员工脑子里</h2>
+                    <div class="split reverse">
+                        <div class="metric reveal"><strong>问</strong><span>比找文件更自然</span></div>
+                        <div class="list">
+                            <div class="list-item reveal"><strong>制度问答</strong><span>新人可以直接问流程、规则、模板在哪里。</span></div>
+                            <div class="list-item reveal"><strong>项目经验</strong><span>历史复盘可被检索、总结和迁移。</span></div>
+                            <div class="list-item reveal"><strong>标准话术</strong><span>销售、客服、运营输出口径更一致。</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Process Automation</div>
+                <div class="slide-number reveal">15</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content">
+                    <h2 class="reveal">从助手到流程：AI 可以串起动作</h2>
+                    <div class="roadmap">
+                        <div class="milestone reveal"><b>01</b><span>读懂输入：邮件、表单、聊天、文档。</span></div>
+                        <div class="milestone reveal"><b>02</b><span>判断类型：分类、优先级、是否需要升级。</span></div>
+                        <div class="milestone reveal"><b>03</b><span>生成输出：回复、摘要、任务、报表。</span></div>
+                        <div class="milestone reveal"><b>04</b><span>交给系统：CRM、飞书、表格、工单。</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Value Matrix</div>
+                <div class="slide-number reveal">16</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content wide">
+                    <h2 class="reveal">先做哪一个：用矩阵判断</h2>
+                    <div class="matrix reveal">
+                        <div class="cell head">场景</div><div class="cell head">价值</div><div class="cell head">难度</div><div class="cell head">优先级</div>
+                        <div class="cell side">会议纪要</div><div class="cell">节省时间，推动执行</div><div class="cell">低</div><div class="cell">马上做</div>
+                        <div class="cell side">知识库问答</div><div class="cell">减少重复咨询</div><div class="cell">中</div><div class="cell">第二批</div>
+                        <div class="cell side">销售助手</div><div class="cell">提升成交准备质量</div><div class="cell">中</div><div class="cell">重点试点</div>
+                        <div class="cell side">流程自动化</div><div class="cell">长期降本增效</div><div class="cell">高</div><div class="cell">分阶段</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Pilot Design</div>
+                <div class="slide-number reveal">17</div>
+                <div class="content">
+                    <h2 class="reveal">第一个 AI 试点，建议这样设计</h2>
+                    <div class="ladder">
+                        <div class="step reveal"><b>1</b><span>选一个部门：销售、客服、运营三选一。</span></div>
+                        <div class="step reveal"><b>2</b><span>选一个任务：每天重复、结果容易判断、风险可控。</span></div>
+                        <div class="step reveal"><b>3</b><span>跑四周：记录节省时间、输出质量、人员反馈。</span></div>
+                        <div class="step reveal"><b>4</b><span>决定扩展：有价值就模板化，无价值就换场景。</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Governance</div>
+                <div class="slide-number reveal">18</div>
+                <div class="content">
+                    <h2 class="reveal">AI 要用，也要管</h2>
+                    <div class="risk-list">
+                        <div class="risk reveal"><b>信息安全</b><span>客户资料、财务数据、合同内容不能随便上传公共模型。</span></div>
+                        <div class="risk reveal"><b>事实错误</b><span>AI 会编造，关键结论必须有人校验和负责。</span></div>
+                        <div class="risk reveal"><b>版权合规</b><span>外部发布内容要避免直接复制不明来源材料。</span></div>
+                        <div class="risk reveal"><b>流程失控</b><span>自动化动作要有审批、日志和回滚机制。</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Rules</div>
+                <div class="slide-number reveal">19</div>
+                <div class="content">
+                    <h2 class="reveal">公司内部可以先定 4 条使用原则</h2>
+                    <div class="four-grid">
+                        <div class="tile reveal"><span class="tag">01</span><h3>敏感信息不上公共模型</h3><p>先保护客户、合同、财务和个人隐私。</p></div>
+                        <div class="tile reveal"><span class="tag">02</span><h3>AI 输出必须可追责</h3><p>对外、对钱、对合同的内容由人确认。</p></div>
+                        <div class="tile reveal"><span class="tag">03</span><h3>沉淀好提示词和模板</h3><p>好用的方法要复用，不靠个人灵感。</p></div>
+                        <div class="tile reveal"><span class="tag">04</span><h3>每月复盘真实价值</h3><p>看节省时间、质量提升和业务结果。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Capability Building</div>
+                <div class="slide-number reveal">20</div>
+                <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
+                <div class="content">
+                    <h2 class="reveal">AI 能力建设，不只是买账号</h2>
+                    <div class="split">
+                        <div class="list">
+                            <div class="list-item reveal"><strong>工具层</strong><span>选择安全、稳定、适合业务的 AI 工具。</span></div>
+                            <div class="list-item reveal"><strong>数据层</strong><span>整理知识库、SOP、产品资料和客户问题。</span></div>
+                            <div class="list-item reveal"><strong>流程层</strong><span>把 AI 嵌入真实岗位动作，而不是停留在体验。</span></div>
+                            <div class="list-item reveal"><strong>人才层</strong><span>培养会提问、会判断、会复盘的员工。</span></div>
+                        </div>
+                        <div class="orange-panel reveal">
+                            <h3>关键判断</h3>
+                            <p>谁能把 AI 变成流程，谁才真正获得生产力优势。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">90-Day Roadmap</div>
+                <div class="slide-number reveal">21</div>
+                <div class="content">
+                    <h2 class="reveal">建议的 90 天落地路线</h2>
+                    <div class="roadmap">
+                        <div class="milestone reveal"><b>0-15</b><span>做科普培训，建立安全边界，收集部门痛点。</span></div>
+                        <div class="milestone reveal"><b>16-30</b><span>选 2-3 个低风险场景，做提示词和模板。</span></div>
+                        <div class="milestone reveal"><b>31-60</b><span>跑试点，记录时间、质量、满意度和问题。</span></div>
+                        <div class="milestone reveal"><b>61-90</b><span>固化流程，扩展到第二批部门和场景。</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Decision Needed</div>
+                <div class="slide-number reveal">22</div>
+                <div class="content">
+                    <h2 class="reveal">需要老板拍板的不是“要不要 AI”</h2>
+                    <p class="lead reveal">真正需要决策的是：先从哪里开始、谁来负责、什么边界不能碰、用什么指标判断继续投入。</p>
+                    <div class="three-grid">
+                        <div class="tile reveal"><span class="tag">Owner</span><h3>负责人</h3><p>指定一个跨部门推进人，避免每个部门各试各的。</p></div>
+                        <div class="tile reveal"><span class="tag">Budget</span><h3>试点预算</h3><p>工具账号、数据整理、培训和轻量集成。</p></div>
+                        <div class="tile reveal"><span class="tag">Metrics</span><h3>衡量指标</h3><p>节省时间、输出质量、复用次数、业务贡献。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">First Three Pilots</div>
+                <div class="slide-number reveal">23</div>
+                <div class="content wide">
+                    <h2 class="reveal">建议先启动 3 个试点</h2>
+                    <div class="three-grid">
+                        <div class="tile reveal"><span class="tag">Pilot A</span><h3>会议纪要与行动项</h3><p>所有管理会议都能立刻受益，阻力小、见效快。</p></div>
+                        <div class="tile reveal"><span class="tag">Pilot B</span><h3>销售拜访助手</h3><p>用 AI 做客户准备、跟进邮件和机会复盘。</p></div>
+                        <div class="tile reveal"><span class="tag">Pilot C</span><h3>内部知识库问答</h3><p>把制度、SOP、产品资料变成可问可用的知识资产。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="slide-number reveal">24</div>
+                <div class="final-word reveal">AI 的机会不是“更会聊天”。<br>而是让公司<span>更快学习、更快行动、更快迭代。</span></div>
+                <p class="speaker-note reveal">下一步：选定第一批试点场景，四周内做出可衡量结果。</p>
+            </section>
+        </main>
+    </div>
+
+    <nav class="section-tabs" aria-label="Deck sections">
+        <button class="section-tab active" data-target-slide="0">认知</button>
+        <button class="section-tab" data-target-slide="6">个人</button>
+        <button class="section-tab" data-target-slide="8">公司</button>
+        <button class="section-tab" data-target-slide="16">路线</button>
+    </nav>
+    <nav class="dot-nav" id="dotNav" aria-label="Slide shortcuts"></nav>
+    <div class="deck-controls">
+        <button id="prevBtn" title="Previous">Prev</button>
+        <span id="counter">1 / 24</span>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <button id="nextBtn" title="Next">Next</button>
+    </div>
+    <div class="edit-hotzone" id="editHotzone"></div>
+    <button class="edit-toggle" id="editToggle" title="Edit mode (E)">Edit</button>
+    <button class="export-button" id="exportButton" title="Export edited HTML">Export</button>
+
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = Array.from(document.querySelectorAll(".slide"));
+                this.currentSlide = 0;
+                this.stage = document.getElementById("deckStage");
+                this.counter = document.getElementById("counter");
+                this.progressBar = document.getElementById("progressBar");
+                this.dotNav = document.getElementById("dotNav");
+                this.sectionTabs = Array.from(document.querySelectorAll(".section-tab"));
+                this.touchStartX = 0;
+                this.editMode = false;
+                this.setupStageScale();
+                this.setupControls();
+                this.setupSectionTabs();
+                this.setupDotNav();
+                this.setupJumpTiles();
+                this.setupBackToMap();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.setupEditing();
+                this.restoreEdits();
+                this.showSlide(0);
+            }
+
+            setupStageScale() {
+                const scale = () => {
+                    const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+                    const x = (window.innerWidth - 1920 * factor) / 2;
+                    const y = (window.innerHeight - 1080 * factor) / 2;
+                    this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+                };
+                scale();
+                window.addEventListener("resize", scale);
+            }
+
+            setupControls() {
+                document.getElementById("prevBtn").addEventListener("click", () => this.prev());
+                document.getElementById("nextBtn").addEventListener("click", () => this.next());
+            }
+
+            setupSectionTabs() {
+                this.sectionTabs.forEach((tab) => {
+                    tab.addEventListener("click", () => {
+                        this.showSlide(Number(tab.dataset.targetSlide));
+                    });
+                });
+            }
+
+            setupDotNav() {
+                this.slides.forEach((_, index) => {
+                    const dot = document.createElement("button");
+                    dot.type = "button";
+                    dot.title = `第 ${index + 1} 页`;
+                    dot.setAttribute("aria-label", `跳到第 ${index + 1} 页`);
+                    dot.addEventListener("mouseenter", () => this.showSlide(index));
+                    dot.addEventListener("focus", () => this.showSlide(index));
+                    dot.addEventListener("click", () => this.showSlide(index));
+                    this.dotNav.appendChild(dot);
+                });
+            }
+
+            setupJumpTiles() {
+                document.querySelectorAll("[data-jump-slide]").forEach((tile) => {
+                    const jump = () => this.showSlide(Number(tile.dataset.jumpSlide));
+                    tile.addEventListener("click", jump);
+                    tile.addEventListener("keydown", (event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            jump();
+                        }
+                    });
+                });
+            }
+
+            setupBackToMap() {
+                document.querySelectorAll("[data-back-to-map]").forEach((button) => {
+                    button.addEventListener("click", () => this.showSlide(9));
+                });
+            }
+
+            setupKeyboardNav() {
+                window.addEventListener("keydown", (event) => {
+                    if (event.key.toLowerCase() === "e") {
+                        this.toggleEditMode();
+                        return;
+                    }
+                    if (this.editMode && event.target.isContentEditable) return;
+                    if (["ArrowRight", " ", "PageDown"].includes(event.key)) this.next();
+                    if (["ArrowLeft", "PageUp"].includes(event.key)) this.prev();
+                });
+            }
+
+            setupTouchNav() {
+                window.addEventListener("touchstart", (event) => {
+                    this.touchStartX = event.changedTouches[0].clientX;
+                }, { passive: true });
+                window.addEventListener("touchend", (event) => {
+                    const delta = event.changedTouches[0].clientX - this.touchStartX;
+                    if (Math.abs(delta) < 60) return;
+                    delta < 0 ? this.next() : this.prev();
+                }, { passive: true });
+            }
+
+            setupWheelNav() {
+                let locked = false;
+                window.addEventListener("wheel", (event) => {
+                    if (locked) return;
+                    if (Math.abs(event.deltaY) < 32) return;
+                    locked = true;
+                    event.deltaY > 0 ? this.next() : this.prev();
+                    setTimeout(() => { locked = false; }, 520);
+                }, { passive: true });
+            }
+
+            setupEditing() {
+                const hotzone = document.getElementById("editHotzone");
+                const editToggle = document.getElementById("editToggle");
+                const exportButton = document.getElementById("exportButton");
+                let hideTimer;
+
+                const showButtons = () => {
+                    clearTimeout(hideTimer);
+                    editToggle.classList.add("show");
+                    exportButton.classList.add("show");
+                };
+                const hideButtons = () => {
+                    hideTimer = setTimeout(() => {
+                        if (!this.editMode) {
+                            editToggle.classList.remove("show");
+                            exportButton.classList.remove("show");
+                        }
+                    }, 400);
+                };
+
+                hotzone.addEventListener("mouseenter", showButtons);
+                hotzone.addEventListener("mouseleave", hideButtons);
+                editToggle.addEventListener("mouseenter", showButtons);
+                editToggle.addEventListener("mouseleave", hideButtons);
+                exportButton.addEventListener("mouseenter", showButtons);
+                exportButton.addEventListener("mouseleave", hideButtons);
+                editToggle.addEventListener("click", () => this.toggleEditMode());
+                exportButton.addEventListener("click", () => this.exportHtml());
+
+                this.slides.forEach((slide, slideIndex) => {
+                    slide.querySelectorAll("h1, h2, h3, p, span, strong, b").forEach((node, nodeIndex) => {
+                        node.dataset.editKey = `slide-${slideIndex}-node-${nodeIndex}`;
+                        node.addEventListener("input", () => {
+                            localStorage.setItem(`ai-boss-briefing:${node.dataset.editKey}`, node.innerHTML);
+                        });
+                    });
+                });
+            }
+
+            restoreEdits() {
+                document.querySelectorAll("[data-edit-key]").forEach((node) => {
+                    const saved = localStorage.getItem(`ai-boss-briefing:${node.dataset.editKey}`);
+                    if (saved) node.innerHTML = saved;
+                });
+            }
+
+            toggleEditMode() {
+                this.editMode = !this.editMode;
+                document.getElementById("editToggle").classList.toggle("active", this.editMode);
+                document.getElementById("exportButton").classList.toggle("active", this.editMode);
+                document.querySelectorAll("[data-edit-key]").forEach((node) => {
+                    node.contentEditable = this.editMode ? "true" : "false";
+                });
+            }
+
+            exportHtml() {
+                const blob = new Blob([document.documentElement.outerHTML], { type: "text/html" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "ai-boss-briefing-edited.html";
+                link.click();
+                URL.revokeObjectURL(url);
+            }
+
+            showSlide(index) {
+                this.currentSlide = Math.max(0, Math.min(index, this.slides.length - 1));
+                this.slides.forEach((slide, i) => {
+                    slide.classList.toggle("active", i === this.currentSlide);
+                    slide.classList.toggle("visible", i === this.currentSlide);
+                });
+                this.counter.textContent = `${this.currentSlide + 1} / ${this.slides.length}`;
+                this.progressBar.style.width = `${((this.currentSlide + 1) / this.slides.length) * 100}%`;
+                Array.from(this.dotNav.children).forEach((dot, i) => {
+                    dot.classList.toggle("active", i === this.currentSlide);
+                });
+                this.sectionTabs.forEach((tab, i) => {
+                    const start = Number(tab.dataset.targetSlide);
+                    const next = this.sectionTabs[i + 1] ? Number(this.sectionTabs[i + 1].dataset.targetSlide) : this.slides.length;
+                    tab.classList.toggle("active", this.currentSlide >= start && this.currentSlide < next);
+                });
+            }
+
+            next() { this.showSlide(this.currentSlide + 1); }
+            prev() { this.showSlide(this.currentSlide - 1); }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>
