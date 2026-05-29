@@ -407,6 +407,27 @@
             font-weight: 900;
         }
 
+        .question-statement {
+            left: 92px;
+            top: 78px;
+            width: 1320px;
+            font-size: 116px;
+            line-height: 1.08;
+        }
+
+        .question-statement .quote-line {
+            display: block;
+            white-space: nowrap;
+            margin-left: 560px;
+        }
+
+        .question-statement .accent {
+            display: block;
+            margin-top: 72px;
+            white-space: nowrap;
+            font-size: 104px;
+        }
+
         .statement-note {
             position: absolute;
             left: 136px;
@@ -645,6 +666,30 @@
             font-weight: 800;
         }
 
+        .metric.center-badge strong {
+            width: 246px;
+            height: 246px;
+            display: grid;
+            place-items: center;
+            border: 9px solid #ff4d4d;
+            border-radius: 50%;
+            color: var(--orange);
+            font-size: 128px;
+            line-height: 1;
+            text-align: center;
+        }
+
+        .metric.center-badge span {
+            position: absolute;
+            left: 50%;
+            bottom: 86px;
+            transform: translateX(-50%);
+            width: 460px;
+            margin-top: 0;
+            text-align: center;
+            white-space: nowrap;
+        }
+
         .ladder {
             margin-top: 56px;
             display: grid;
@@ -720,6 +765,10 @@
             background: var(--orange);
         }
 
+        .roadmap.no-line::before {
+            display: none;
+        }
+
         .milestone {
             position: absolute;
             width: 310px;
@@ -792,6 +841,18 @@
 
         .final-word span {
             color: var(--orange);
+        }
+
+        .final-word.no-orphan {
+            left: 28px;
+            top: 20px;
+            width: 1540px;
+            font-size: 112px;
+            line-height: 1.08;
+        }
+
+        .final-word.no-orphan .nowrap {
+            white-space: nowrap;
         }
 
         .speaker-note {
@@ -877,7 +938,10 @@
             <section class="slide">
                 <div class="kicker reveal">Opening Frame</div>
                 <div class="slide-number reveal">02</div>
-                <div class="big-statement reveal">今天不问“AI 能做什么”。<br>只问：<span class="accent">公司先做哪三件事。</span></div>
+                <div class="big-statement question-statement reveal">
+                    今天不问<span class="quote-line">“AI 能做什么”。</span>
+                    <span class="accent">公司先做哪三件事。</span>
+                </div>
                 <p class="statement-note reveal">老板需要的是优先级、负责人、预算边界和可验证结果，而不是一张工具名单。</p>
             </section>
 
@@ -1011,7 +1075,7 @@
                             <div class="list-item reveal"><strong>拜访后</strong><span>生成跟进邮件、机会评分、异议清单和下一步推进计划。</span></div>
                             <div class="list-item reveal"><strong>管理端</strong><span>把优秀销售的方法沉淀成模板，复制给新人和区域团队。</span></div>
                         </div>
-                        <div class="metric reveal"><strong>赢</strong><span>先提升商机质量</span></div>
+                        <div class="metric center-badge reveal"><strong>赢</strong><span>先提升商机质量</span></div>
                     </div>
                 </div>
             </section>
@@ -1052,7 +1116,7 @@
                 <div class="content">
                     <h2 class="reveal">知识库：先统一内部答案</h2>
                     <div class="split reverse">
-                        <div class="metric reveal"><strong>准</strong><span>口径一致最值钱</span></div>
+                        <div class="metric center-badge reveal"><strong>准</strong><span>口径一致最值钱</span></div>
                         <div class="list">
                             <div class="list-item reveal"><strong>制度与流程</strong><span>新人能直接问规则、模板、审批路径和负责人。</span></div>
                             <div class="list-item reveal"><strong>产品与话术</strong><span>销售、客服、运营对外口径保持一致。</span></div>
@@ -1068,7 +1132,7 @@
                 <button class="back-to-map" data-back-to-map type="button">返回场景总览</button>
                 <div class="content">
                     <h2 class="reveal">流程自动化：<br>让 AI 做审批前工作</h2>
-                    <div class="roadmap">
+                    <div class="roadmap no-line">
                         <div class="milestone reveal"><b>01</b><span>读懂输入：邮件、表单、聊天、合同、工单。</span></div>
                         <div class="milestone reveal"><b>02</b><span>做初步判断：分类、缺项、风险、优先级。</span></div>
                         <div class="milestone reveal"><b>03</b><span>生成待确认结果：摘要、任务、回复、审批建议。</span></div>
@@ -1199,7 +1263,11 @@
 
             <section class="slide">
                 <div class="slide-number reveal">24</div>
-                <div class="final-word reveal">AI 的机会不是“多一个工具”。<br>而是让公司<span>把经验复制得更快，把流程跑得更轻。</span></div>
+                <div class="final-word no-orphan reveal">
+                    <span class="nowrap">AI 的机会不是“多一个工具”。</span><br>
+                    <span class="nowrap">而是让公司把经验复制得更快，</span><br>
+                    <span class="nowrap">把流程跑得更轻。</span>
+                </div>
                 <p class="speaker-note reveal">下一步：拍板 3 个试点，四周内用数据决定是否扩展。</p>
             </section>
         </main>
