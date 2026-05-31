@@ -607,6 +607,122 @@
             color: rgba(255, 245, 232, 0.72);
         }
 
+        .generation-grid {
+            margin-top: 42px;
+        }
+
+        .generation-card {
+            min-height: 440px;
+            padding: 30px;
+        }
+
+        .gen-icon {
+            width: 112px;
+            height: 86px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .gen-icon::before,
+        .gen-icon::after {
+            content: "";
+            position: absolute;
+            display: block;
+        }
+
+        .gen-icon.clock {
+            border: 6px solid var(--orange);
+            border-radius: 50%;
+        }
+
+        .gen-icon.clock::before {
+            left: 49px;
+            top: 18px;
+            width: 6px;
+            height: 32px;
+            background: var(--cream);
+            transform-origin: bottom center;
+            transform: rotate(0deg);
+        }
+
+        .gen-icon.clock::after {
+            left: 52px;
+            top: 48px;
+            width: 34px;
+            height: 6px;
+            background: var(--cream);
+            transform-origin: left center;
+            transform: rotate(28deg);
+        }
+
+        .gen-icon.chat {
+            width: 122px;
+            height: 82px;
+            border: 6px solid var(--orange);
+            border-radius: 28px;
+        }
+
+        .gen-icon.chat::before {
+            left: 22px;
+            top: 24px;
+            width: 70px;
+            height: 6px;
+            background: var(--cream);
+            box-shadow: 0 18px 0 rgba(255, 245, 232, 0.72);
+        }
+
+        .gen-icon.chat::after {
+            left: 22px;
+            bottom: -24px;
+            width: 30px;
+            height: 30px;
+            background: var(--orange);
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+
+        .gen-icon.agent {
+            width: 124px;
+            height: 90px;
+            border: 6px solid var(--orange);
+            border-radius: 24px;
+        }
+
+        .gen-icon.agent::before {
+            left: 22px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--cream);
+            box-shadow: 52px 0 0 var(--cream);
+        }
+
+        .gen-icon.agent::after {
+            left: 34px;
+            bottom: -30px;
+            width: 56px;
+            height: 36px;
+            border-left: 6px solid var(--orange);
+            border-right: 6px solid var(--orange);
+            border-bottom: 6px solid var(--orange);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .generation-card .tag {
+            margin-bottom: 18px;
+        }
+
+        .generation-card h3 {
+            font-size: 34px;
+            line-height: 1.15;
+            margin-bottom: 18px;
+        }
+
+        .generation-card p {
+            font-size: 24px;
+            line-height: 1.32;
+        }
+
         .split {
             display: grid;
             grid-template-columns: 0.92fr 1.08fr;
@@ -968,12 +1084,12 @@
                 <div class="kicker reveal">One Sentence</div>
                 <div class="slide-number reveal">03</div>
                 <div class="content">
-                    <h2 class="reveal">一句话理解 2026 的 AI</h2>
-                    <p class="lead reveal">AI 正从“生成内容”走向“完成工作片段”：读懂输入、判断下一步、生成输出，并把结果交给系统或人审批。</p>
-                    <div class="three-grid">
-                        <div class="tile reveal"><span class="tag">Read</span><h3>读懂业务资料</h3><p>会议、客户、产品、制度、报表，先变成结构化判断。</p></div>
-                        <div class="tile reveal"><span class="tag">Reason</span><h3>辅助判断</h3><p>比较选项、发现风险、生成反方意见和下一步建议。</p></div>
-                        <div class="tile reveal"><span class="tag">Operate</span><h3>接入流程</h3><p>把输出推到 CRM、工单、表格、飞书或审批节点。</p></div>
+                    <h2 class="reveal">三代 AI：从听命令到会干活</h2>
+                    <p class="lead reveal">理解 AI 不用先学技术。看它能不能适应变化、能不能理解人话、能不能自己完成一段工作。</p>
+                    <div class="three-grid generation-grid">
+                        <div class="tile generation-card reveal"><div class="gen-icon clock"></div><span class="tag">过去</span><h3>死记硬背的机器人</h3><p>按固定规则干活，像老闹钟和老式产线。温度到 20℃ 就报警，按钮按下就搅拌；一变就错，不会自己学。</p></div>
+                        <div class="tile generation-card reveal"><div class="gen-icon chat"></div><span class="tag">现在</span><h3>会聊天的助理</h3><p>能听懂人话，回答问题、写文案、查资料、算数据。像什么都懂一点的实习生，你问，它答。</p></div>
+                        <div class="tile generation-card reveal"><div class="gen-icon agent"></div><span class="tag">2025-2026</span><h3>会干活的智能工人</h3><p>AI 智能体 Agent：感知、思考、决策、执行、反馈。工厂能质检排产，办公室能做报表和巡检报告。</p></div>
                     </div>
                 </div>
             </section>
