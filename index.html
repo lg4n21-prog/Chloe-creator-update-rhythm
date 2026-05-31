@@ -915,17 +915,22 @@
         .edit-toggle,
         .export-button {
             position: fixed;
-            left: 18px;
-            opacity: 0;
-            pointer-events: none;
+            left: 22px;
+            opacity: 1;
+            pointer-events: auto;
             transition: opacity 0.25s ease;
             z-index: 10001;
             background: rgba(0, 0, 0, 0.68);
             backdrop-filter: blur(12px);
         }
 
-        .edit-toggle { top: 18px; }
-        .export-button { top: 62px; }
+        .edit-toggle { bottom: 22px; }
+        .export-button { bottom: 66px; }
+
+        .edit-toggle.active {
+            color: var(--ink);
+            background: var(--orange);
+        }
 
         .edit-toggle.show,
         .edit-toggle.active,
@@ -1068,7 +1073,7 @@
                     <h2 class="reveal">六个优先场景</h2>
                     <div class="three-grid">
                         <div class="tile reveal" data-jump-slide="10" tabindex="0" role="button" aria-label="跳转到销售支持详情页"><span class="tag">Sales</span><h3>销售机会推进</h3><p>客户研究、拜访准备、跟进邮件、复盘。</p></div>
-                        <div class="tile reveal" data-jump-slide="11" tabindex="0" role="button" aria-label="跳转到市场运营详情页"><span class="tag">Marketing</span><h3>内容增长工厂</h3><p class="mini-items"><span>爆款抓取 + Digest 推送</span><span>提炼爆款，复刻品牌风格</span><span>直播/培训内容自动切片</span><span>策略、文案、图片生成</span></p></div>
+                        <div class="tile reveal" data-jump-slide="11" tabindex="0" role="button" aria-label="跳转到市场运营详情页"><span class="tag">Marketing</span><h3>内容增长工厂</h3><p class="mini-items"><span>爆款抓取 + Digest 推送 + 复刻品牌风格</span><span>直播/培训内容自动切片</span><span>策略、文案、图片生成</span></p></div>
                         <div class="tile reveal" data-jump-slide="12" tabindex="0" role="button" aria-label="跳转到客服服务详情页"><span class="tag">Service</span><h3>客服知识问答</h3><p>答案推荐、工单摘要、质检和问题回流。</p></div>
                         <div class="tile reveal" data-jump-slide="19" tabindex="0" role="button" aria-label="跳转到组织能力相关页"><span class="tag">HR</span><h3>员工 AI 能力</h3><p>岗位培训、模板库、提示词规范、内部教练。</p></div>
                         <div class="tile reveal" data-jump-slide="15" tabindex="0" role="button" aria-label="跳转到经营分析相关页"><span class="tag">Finance</span><h3>经营分析助手</h3><p>报表解释、异常归因、管理层摘要。</p></div>
