@@ -1102,6 +1102,10 @@
             white-space: nowrap;
         }
 
+        .final-word.no-orphan .white-line {
+            color: var(--cream);
+        }
+
         .speaker-note {
             position: absolute;
             left: 132px;
@@ -1562,7 +1566,7 @@
                 <div class="final-word no-orphan reveal">
                     <span class="nowrap" data-edit-key="slide-25-node-0" contenteditable="false">By Digital, With AI,</span><br>
                     <span class="nowrap" data-edit-key="slide-25-node-1" contenteditable="false">For Everyone.</span><br>
-                    <span class="nowrap" data-edit-key="slide-25-node-2" contenteditable="false">让每个人都用上新能力。</span>
+                    <span class="nowrap white-line" data-edit-key="slide-25-node-2" contenteditable="false">让每个人都用上新能力。</span>
                 </div>
                 <p class="speaker-note reveal" data-edit-key="slide-25-node-3" contenteditable="false">下一步：拍板 3 个试点，四周内用数据决定是否扩展。</p>
             </section>
@@ -1645,6 +1649,7 @@
             }
 
             setupDotNav() {
+                this.dotNav.innerHTML = "";
                 this.slides.forEach((_, index) => {
                     const dot = document.createElement("button");
                     dot.type = "button";
