@@ -723,6 +723,125 @@
             line-height: 1.32;
         }
 
+        .agent-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 38px;
+            margin-top: 48px;
+        }
+
+        .compare-panel {
+            min-height: 560px;
+            border: 1px solid rgba(255, 245, 232, 0.18);
+            background: rgba(255, 245, 232, 0.055);
+            padding: 42px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .compare-panel.agent {
+            border-color: rgba(255, 90, 31, 0.72);
+            background: rgba(255, 90, 31, 0.10);
+        }
+
+        .compare-panel::after {
+            content: "";
+            position: absolute;
+            right: -68px;
+            bottom: -68px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: var(--orange);
+            opacity: 0.13;
+        }
+
+        .compare-panel .role {
+            display: inline-block;
+            margin-bottom: 28px;
+            color: var(--orange);
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .compare-panel h3 {
+            font-size: 50px;
+            line-height: 1.12;
+            margin-bottom: 30px;
+        }
+
+        .compare-panel ul {
+            list-style: none;
+            display: grid;
+            gap: 18px;
+        }
+
+        .compare-panel li {
+            padding-left: 26px;
+            position: relative;
+            font-size: 28px;
+            line-height: 1.36;
+        }
+
+        .compare-panel li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--orange);
+        }
+
+        .agent-loop {
+            margin-top: 70px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .loop-step {
+            min-height: 310px;
+            border: 1px solid rgba(255, 245, 232, 0.16);
+            background: rgba(255, 245, 232, 0.06);
+            padding: 30px;
+            position: relative;
+        }
+
+        .loop-step::after {
+            content: "→";
+            position: absolute;
+            right: -26px;
+            top: 118px;
+            color: var(--orange);
+            font-size: 52px;
+            font-weight: 900;
+        }
+
+        .loop-step:last-child::after {
+            content: "";
+        }
+
+        .loop-step b {
+            display: block;
+            font-family: "Archivo Black", sans-serif;
+            font-size: 54px;
+            color: var(--orange);
+            margin-bottom: 28px;
+        }
+
+        .loop-step h3 {
+            font-size: 38px;
+            margin-bottom: 20px;
+        }
+
+        .loop-step p {
+            font-size: 25px;
+            line-height: 1.34;
+        }
+
         .split {
             display: grid;
             grid-template-columns: 0.92fr 1.08fr;
@@ -1095,6 +1214,51 @@
             </section>
 
             <section class="slide">
+                <div class="kicker reveal">From Assistant To Agent</div>
+                <div class="slide-number reveal">04</div>
+                <div class="content wide">
+                    <h2 class="reveal">从“会回答”到“能交付”</h2>
+                    <div class="agent-compare">
+                        <div class="compare-panel reveal">
+                            <span class="role">过去 / AI 助手</span>
+                            <h3>像实习生，等人安排</h3>
+                            <ul>
+                                <li>擅长聊天问答、资料检索、内容生成。</li>
+                                <li>必须等待明确指令，无法主动推进任务。</li>
+                                <li>价值主要停留在“把需求变成文字素材”。</li>
+                                <li>典型工具：豆包、DeepSeek、文心一言、GPT、Claude。</li>
+                            </ul>
+                        </div>
+                        <div class="compare-panel agent reveal">
+                            <span class="role">现在 / AI 智能体</span>
+                            <h3>像项目经理，主动闭环</h3>
+                            <ul>
+                                <li>理解目标，拆解步骤，调用工具并动态决策。</li>
+                                <li>从“提供答案”进化为“直接交付成果”。</li>
+                                <li>能连接浏览器、数据库、API 和企业系统。</li>
+                                <li>代表方向：Copilot、Perplexity、OpenAI Agent、AutoGPT。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="kicker reveal">Agent Loop</div>
+                <div class="slide-number reveal">05</div>
+                <div class="content wide">
+                    <h2 class="reveal">AI Agent 的核心：完整工作闭环</h2>
+                    <p class="lead reveal">它不只是执行单一指令，而是把复杂业务任务变成可持续迭代的闭环流程。</p>
+                    <div class="agent-loop">
+                        <div class="loop-step reveal"><b>01</b><h3>理解</h3><p>听懂复杂自然语言，识别真实业务意图和核心需求。</p></div>
+                        <div class="loop-step reveal"><b>02</b><h3>规划</h3><p>把大任务拆成可执行步骤，形成有优先级的行动计划。</p></div>
+                        <div class="loop-step reveal"><b>03</b><h3>执行</h3><p>调用 API、数据库、浏览器或业务系统，完成具体操作。</p></div>
+                        <div class="loop-step reveal"><b>04</b><h3>反馈</h3><p>结构化交付结果，并根据反馈动态优化下一轮流程。</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="slide">
                 <div class="kicker reveal">Why Now</div>
                 <div class="slide-number reveal">04</div>
                 <div class="content">
@@ -1188,12 +1352,12 @@
                 <div class="content wide">
                     <h2 class="reveal">六个优先场景</h2>
                     <div class="three-grid">
-                        <div class="tile reveal" data-jump-slide="10" tabindex="0" role="button" aria-label="跳转到销售支持详情页"><span class="tag">Sales</span><h3>销售机会推进</h3><p>客户研究、拜访准备、跟进邮件、复盘。</p></div>
-                        <div class="tile reveal" data-jump-slide="11" tabindex="0" role="button" aria-label="跳转到市场运营详情页"><span class="tag">Marketing</span><h3>内容增长工厂</h3><p class="mini-items"><span>爆款抓取 + Digest 推送 + 复刻品牌风格</span><span>直播/培训内容自动切片</span><span>策略、文案、图片生成</span></p></div>
-                        <div class="tile reveal" data-jump-slide="12" tabindex="0" role="button" aria-label="跳转到客服服务详情页"><span class="tag">Service</span><h3>客服知识问答</h3><p>答案推荐、工单摘要、质检和问题回流。</p></div>
-                        <div class="tile reveal" data-jump-slide="19" tabindex="0" role="button" aria-label="跳转到组织能力相关页"><span class="tag">HR</span><h3>员工 AI 能力</h3><p>岗位培训、模板库、提示词规范、内部教练。</p></div>
-                        <div class="tile reveal" data-jump-slide="15" tabindex="0" role="button" aria-label="跳转到经营分析相关页"><span class="tag">Finance</span><h3>经营分析助手</h3><p>报表解释、异常归因、管理层摘要。</p></div>
-                        <div class="tile reveal" data-jump-slide="14" tabindex="0" role="button" aria-label="跳转到流程自动化相关页"><span class="tag">Ops</span><h3>流程自动化</h3><p>分类、派单、提醒、审批前检查。</p></div>
+                        <div class="tile reveal" data-jump-slide="12" tabindex="0" role="button" aria-label="跳转到销售支持详情页"><span class="tag">Sales</span><h3>销售机会推进</h3><p>客户研究、拜访准备、跟进邮件、复盘。</p></div>
+                        <div class="tile reveal" data-jump-slide="13" tabindex="0" role="button" aria-label="跳转到市场运营详情页"><span class="tag">Marketing</span><h3>内容增长工厂</h3><p class="mini-items"><span>爆款抓取 + Digest 推送 + 复刻品牌风格</span><span>直播/培训内容自动切片</span><span>策略、文案、图片生成</span></p></div>
+                        <div class="tile reveal" data-jump-slide="14" tabindex="0" role="button" aria-label="跳转到客服服务详情页"><span class="tag">Service</span><h3>客服知识问答</h3><p>答案推荐、工单摘要、质检和问题回流。</p></div>
+                        <div class="tile reveal" data-jump-slide="21" tabindex="0" role="button" aria-label="跳转到组织能力相关页"><span class="tag">HR</span><h3>员工 AI 能力</h3><p>岗位培训、模板库、提示词规范、内部教练。</p></div>
+                        <div class="tile reveal" data-jump-slide="17" tabindex="0" role="button" aria-label="跳转到经营分析相关页"><span class="tag">Finance</span><h3>经营分析助手</h3><p>报表解释、异常归因、管理层摘要。</p></div>
+                        <div class="tile reveal" data-jump-slide="16" tabindex="0" role="button" aria-label="跳转到流程自动化相关页"><span class="tag">Ops</span><h3>流程自动化</h3><p>分类、派单、提醒、审批前检查。</p></div>
                     </div>
                 </div>
             </section>
@@ -1359,12 +1523,11 @@
                 <div class="kicker reveal">90-Day Roadmap</div>
                 <div class="slide-number reveal">21</div>
                 <div class="content">
-                    <h2 class="reveal">建议的 90 天落地路线</h2>
-                    <div class="roadmap no-line">
-                        <div class="milestone reveal"><b>0-15</b><span>定红线、选负责人、培训骨干、收集高频痛点。</span></div>
-                        <div class="milestone reveal"><b>16-30</b><span>确定 3 个试点，做模板、口径和数据准备。</span></div>
-                        <div class="milestone reveal"><b>31-60</b><span>真实运行，记录时间、质量、转化、复用和风险。</span></div>
-                        <div class="milestone reveal"><b>61-90</b><span>保留有效场景，固化 SOP，扩展第二批部门。</span></div>
+                    <h2 class="reveal">下一步行动计划</h2>
+                    <div class="three-grid">
+                        <div class="tile reveal"><span class="tag">1-2 周</span><h3>调研与试点</h3><p>筛选 1-2 个核心业务团队做访谈，找到痛点突出、流程标准、适合 AI 切入的场景。</p></div>
+                        <div class="tile reveal"><span class="tag">2-3 周</span><h3>工具引入与配置</h3><p>基于试点场景引入 Agent 工具，完成配置、接口联调和真实业务数据测试。</p></div>
+                        <div class="tile reveal"><span class="tag">持续进行</span><h3>培训与推广</h3><p>由试点团队分享案例和避坑指南，建立内部交流机制，复制成功经验。</p></div>
                     </div>
                 </div>
             </section>
@@ -1410,9 +1573,9 @@
 
     <nav class="section-tabs" aria-label="Deck sections">
         <button class="section-tab active" data-target-slide="0">认知</button>
-        <button class="section-tab" data-target-slide="6">个人</button>
-        <button class="section-tab" data-target-slide="8">公司</button>
-        <button class="section-tab" data-target-slide="16">路线</button>
+        <button class="section-tab" data-target-slide="8">个人</button>
+        <button class="section-tab" data-target-slide="10">公司</button>
+        <button class="section-tab" data-target-slide="18">路线</button>
     </nav>
     <nav class="dot-nav" id="dotNav" aria-label="Slide shortcuts"></nav>
     <div class="deck-controls">
@@ -1438,6 +1601,7 @@
                 this.touchStartX = 0;
                 this.editMode = false;
                 this.setupStageScale();
+                this.setupSlideNumbers();
                 this.setupControls();
                 this.setupSectionTabs();
                 this.setupDotNav();
@@ -1465,6 +1629,13 @@
             setupControls() {
                 document.getElementById("prevBtn").addEventListener("click", () => this.prev());
                 document.getElementById("nextBtn").addEventListener("click", () => this.next());
+            }
+
+            setupSlideNumbers() {
+                this.slides.forEach((slide, index) => {
+                    const number = slide.querySelector(".slide-number");
+                    if (number) number.textContent = String(index + 1).padStart(2, "0");
+                });
             }
 
             setupSectionTabs() {
@@ -1503,7 +1674,7 @@
 
             setupBackToMap() {
                 document.querySelectorAll("[data-back-to-map]").forEach((button) => {
-                    button.addEventListener("click", () => this.showSlide(9));
+                    button.addEventListener("click", () => this.showSlide(11));
                 });
             }
 
