@@ -1017,28 +1017,74 @@
             position: relative;
         }
 
+        .comic.rider {
+            transform: translateY(6px);
+        }
+
+        .comic.rider span {
+            position: absolute;
+            left: 58px;
+            top: 18px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--cream);
+            box-shadow:
+                8px 34px 0 9px var(--orange),
+                -2px 64px 0 5px var(--cream);
+        }
+
+        .comic.rider span::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 26px;
+            width: 64px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--orange);
+            transform: rotate(22deg);
+        }
+
+        .comic.rider span::after {
+            content: "";
+            position: absolute;
+            left: 12px;
+            top: 64px;
+            width: 42px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--cream);
+            transform: rotate(-34deg);
+            box-shadow: -28px 4px 0 var(--cream);
+        }
+
         .comic.rider::before {
             content: "";
             position: absolute;
-            left: 8px;
-            top: 42px;
-            width: 94px;
-            height: 54px;
+            left: 12px;
+            top: 82px;
+            width: 104px;
+            height: 28px;
             border: 8px solid var(--orange);
-            border-radius: 18px;
-            transform: skewX(-12deg);
+            border-left-width: 12px;
+            border-radius: 12px 32px 18px 14px;
+            transform: skewX(-10deg);
         }
 
         .comic.rider::after {
             content: "";
             position: absolute;
-            left: 20px;
-            bottom: 18px;
-            width: 30px;
-            height: 30px;
+            left: 16px;
+            bottom: 12px;
+            width: 34px;
+            height: 34px;
             border: 8px solid var(--cream);
             border-radius: 50%;
-            box-shadow: 72px 0 0 -8px transparent, 72px 0 0 0 var(--cream);
+            box-shadow:
+                78px 0 0 -8px transparent,
+                78px 0 0 0 var(--cream),
+                108px -70px 0 -10px var(--orange);
         }
 
         .comic.platform {
@@ -1540,7 +1586,7 @@
                     </div>
                     <div class="analogy-row">
                         <div class="comic-card reveal">
-                            <div class="comic rider"></div>
+                            <div class="comic rider"><span></span></div>
                             <div><h3>模型像骑手，调度像平台</h3><p>顶级模型已经像“全城都能跑的骑手”。真正拉开差距的是派单算法：顺路拼单、分配商圈、应对爆单。</p></div>
                         </div>
                         <div class="comic-card reveal">
