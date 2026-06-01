@@ -167,7 +167,8 @@
 
         .deck-controls button,
         .edit-toggle,
-        .export-button {
+        .export-button,
+        .publish-button {
             appearance: none;
             border: 1px solid rgba(255, 255, 255, 0.18);
             color: white;
@@ -239,7 +240,8 @@
             .dot-nav,
             .edit-hotzone,
             .edit-toggle,
-            .export-button {
+            .export-button,
+            .publish-button {
                 display: none !important;
             }
         }
@@ -1370,7 +1372,12 @@
 
         .edit-toggle { bottom: 22px; }
         .export-button { bottom: 66px; }
-        .publish-button { bottom: 110px; }
+        .publish-button {
+            top: 138px;
+            right: 22px;
+            bottom: auto;
+            left: auto;
+        }
 
         .edit-toggle.active {
             color: var(--ink);
@@ -1778,7 +1785,7 @@
     </div>
     <div class="edit-hotzone" id="editHotzone"></div>
     <button class="edit-toggle show" id="editToggle" title="Edit mode (E)">Edit</button>
-    <button class="export-button show" id="exportButton" title="Export edited HTML">Export</button>
+    <button class="export-button show" id="exportButton" title="Export as PDF">PDF</button>
     <button class="publish-button show" id="publishButton" title="Save and push via local publisher">Publish</button>
 
     <script>
@@ -1938,7 +1945,7 @@
                 publishButton.addEventListener("mouseenter", showButtons);
                 publishButton.addEventListener("mouseleave", hideButtons);
                 editToggle.addEventListener("click", () => this.toggleEditMode());
-                exportButton.addEventListener("click", () => this.exportHtml());
+                exportButton.addEventListener("click", () => this.exportPdf());
                 publishButton.addEventListener("click", () => this.publishHtml());
 
                 this.slides.forEach((slide, slideIndex) => {
@@ -1967,14 +1974,9 @@
                 });
             }
 
-            exportHtml() {
-                const blob = new Blob([document.documentElement.outerHTML], { type: "text/html" });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = "ai-boss-briefing-edited.html";
-                link.click();
-                URL.revokeObjectURL(url);
+            exportPdf() {
+                if (this.editMode) this.toggleEditMode();
+                requestAnimationFrame(() => window.print());
             }
 
             async publishHtml() {
