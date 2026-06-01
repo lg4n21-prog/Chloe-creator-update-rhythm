@@ -1356,7 +1356,8 @@
         }
 
         .edit-toggle,
-        .export-button {
+        .export-button,
+        .publish-button {
             position: fixed;
             left: 22px;
             opacity: 1;
@@ -1369,6 +1370,7 @@
 
         .edit-toggle { bottom: 22px; }
         .export-button { bottom: 66px; }
+        .publish-button { bottom: 110px; }
 
         .edit-toggle.active {
             color: var(--ink);
@@ -1378,7 +1380,9 @@
         .edit-toggle.show,
         .edit-toggle.active,
         .export-button.show,
-        .export-button.active {
+        .export-button.active,
+        .publish-button.show,
+        .publish-button.active {
             opacity: 1;
             pointer-events: auto;
         }
@@ -1765,7 +1769,7 @@
         <button class="section-tab" data-target-slide="9">公司</button>
         <button class="section-tab active" data-target-slide="17">路线</button>
     </nav>
-    <nav class="dot-nav" id="dotNav" aria-label="Slide shortcuts"><button type="button" title="第 1 页" aria-label="跳到第 1 页" class=""></button><button type="button" title="第 2 页" aria-label="跳到第 2 页" class=""></button><button type="button" title="第 3 页" aria-label="跳到第 3 页" class=""></button><button type="button" title="第 4 页" aria-label="跳到第 4 页" class=""></button><button type="button" title="第 5 页" aria-label="跳到第 5 页" class=""></button><button type="button" title="第 6 页" aria-label="跳到第 6 页" class=""></button><button type="button" title="第 7 页" aria-label="跳到第 7 页"></button><button type="button" title="第 8 页" aria-label="跳到第 8 页"></button><button type="button" title="第 9 页" aria-label="跳到第 9 页"></button><button type="button" title="第 10 页" aria-label="跳到第 10 页"></button><button type="button" title="第 11 页" aria-label="跳到第 11 页" class=""></button><button type="button" title="第 12 页" aria-label="跳到第 12 页" class=""></button><button type="button" title="第 13 页" aria-label="跳到第 13 页"></button><button type="button" title="第 14 页" aria-label="跳到第 14 页"></button><button type="button" title="第 15 页" aria-label="跳到第 15 页"></button><button type="button" title="第 16 页" aria-label="跳到第 16 页" class=""></button><button type="button" title="第 17 页" aria-label="跳到第 17 页"></button><button type="button" title="第 18 页" aria-label="跳到第 18 页"></button><button type="button" title="第 19 页" aria-label="跳到第 19 页" class=""></button><button type="button" title="第 20 页" aria-label="跳到第 20 页" class=""></button><button type="button" title="第 21 页" aria-label="跳到第 21 页" class=""></button><button type="button" title="第 22 页" aria-label="跳到第 22 页" class=""></button><button type="button" title="第 23 页" aria-label="跳到第 23 页" class=""></button><button type="button" title="第 24 页" aria-label="跳到第 24 页" class=""></button><button type="button" title="第 25 页" aria-label="跳到第 25 页" class=""></button><button type="button" title="第 26 页" aria-label="跳到第 26 页" class="active"></button></nav>
+    <nav class="dot-nav" id="dotNav" aria-label="Slide shortcuts"></nav>
     <div class="deck-controls">
         <button id="prevBtn" title="Previous">Prev</button>
         <span id="counter">26 / 26</span>
@@ -1775,6 +1779,7 @@
     <div class="edit-hotzone" id="editHotzone"></div>
     <button class="edit-toggle show" id="editToggle" title="Edit mode (E)">Edit</button>
     <button class="export-button show" id="exportButton" title="Export edited HTML">Export</button>
+    <button class="publish-button show" id="publishButton" title="Save and push via local publisher">Publish</button>
 
     <script>
         class SlidePresentation {
@@ -1905,18 +1910,21 @@
                 const hotzone = document.getElementById("editHotzone");
                 const editToggle = document.getElementById("editToggle");
                 const exportButton = document.getElementById("exportButton");
+                const publishButton = document.getElementById("publishButton");
                 let hideTimer;
 
                 const showButtons = () => {
                     clearTimeout(hideTimer);
                     editToggle.classList.add("show");
                     exportButton.classList.add("show");
+                    publishButton.classList.add("show");
                 };
                 const hideButtons = () => {
                     hideTimer = setTimeout(() => {
                         if (!this.editMode) {
                             editToggle.classList.remove("show");
                             exportButton.classList.remove("show");
+                            publishButton.classList.remove("show");
                         }
                     }, 400);
                 };
@@ -1927,8 +1935,11 @@
                 editToggle.addEventListener("mouseleave", hideButtons);
                 exportButton.addEventListener("mouseenter", showButtons);
                 exportButton.addEventListener("mouseleave", hideButtons);
+                publishButton.addEventListener("mouseenter", showButtons);
+                publishButton.addEventListener("mouseleave", hideButtons);
                 editToggle.addEventListener("click", () => this.toggleEditMode());
                 exportButton.addEventListener("click", () => this.exportHtml());
+                publishButton.addEventListener("click", () => this.publishHtml());
 
                 this.slides.forEach((slide, slideIndex) => {
                     slide.querySelectorAll("h1, h2, h3, p, span, strong, b").forEach((node, nodeIndex) => {
@@ -1964,6 +1975,29 @@
                 link.download = "ai-boss-briefing-edited.html";
                 link.click();
                 URL.revokeObjectURL(url);
+            }
+
+            async publishHtml() {
+                const publishButton = document.getElementById("publishButton");
+                const originalText = publishButton.textContent;
+                publishButton.textContent = "Publishing...";
+                publishButton.disabled = true;
+                try {
+                    const response = await fetch("http://127.0.0.1:4174/publish", {
+                        method: "POST",
+                        headers: { "Content-Type": "text/html;charset=utf-8" },
+                        body: document.documentElement.outerHTML
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(result.error || `HTTP ${response.status}`);
+                    publishButton.textContent = result.changed === false ? "No changes" : "Published";
+                    setTimeout(() => { publishButton.textContent = originalText; }, 1800);
+                } catch (error) {
+                    alert(`Publish failed. 请先启动本地发布服务：\n\nnode tools/publish-server.mjs\n\n错误：${error.message}`);
+                    publishButton.textContent = originalText;
+                } finally {
+                    publishButton.disabled = false;
+                }
             }
 
             showSlide(index) {
