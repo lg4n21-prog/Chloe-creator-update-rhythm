@@ -1117,49 +1117,47 @@
             background: var(--orange);
         }
 
-        .engine-car {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .engine {
-            width: 68px;
-            height: 72px;
-            border: 7px solid var(--orange);
-            border-radius: 12px;
+        .small-car {
+            width: 150px;
+            height: 150px;
             position: relative;
         }
 
-        .engine::before {
+        .small-car::before {
             content: "";
             position: absolute;
-            left: -20px;
-            top: 24px;
-            width: 16px;
-            height: 20px;
-            background: var(--orange);
-            box-shadow: 86px 0 0 var(--orange);
+            left: 20px;
+            top: 58px;
+            width: 108px;
+            height: 54px;
+            border: 8px solid var(--cream);
+            border-radius: 42px 42px 18px 18px;
         }
 
-        .car {
-            width: 88px;
-            height: 58px;
-            border: 7px solid var(--cream);
-            border-radius: 34px 34px 16px 16px;
-            position: relative;
-        }
-
-        .car::after {
+        .small-car::after {
             content: "";
             position: absolute;
-            left: 8px;
-            bottom: -24px;
-            width: 22px;
-            height: 22px;
+            left: 28px;
+            top: 104px;
+            width: 24px;
+            height: 24px;
             background: var(--orange);
             border-radius: 50%;
-            box-shadow: 46px 0 0 var(--orange);
+            box-shadow:
+                68px 0 0 var(--orange),
+                28px -62px 0 -8px var(--orange),
+                62px -62px 0 -8px var(--orange);
+        }
+
+        .small-car span {
+            position: absolute;
+            left: 54px;
+            top: 44px;
+            width: 42px;
+            height: 28px;
+            border: 7px solid var(--orange);
+            border-bottom: 0;
+            border-radius: 26px 26px 0 0;
         }
 
         .split {
@@ -1590,7 +1588,7 @@
                             <div><h3>模型像骑手，调度像平台</h3><p>顶级模型已经像“全城都能跑的骑手”。真正拉开差距的是派单算法：顺路拼单、分配商圈、应对爆单。</p></div>
                         </div>
                         <div class="comic-card reveal">
-                            <div class="engine-car"><div class="engine"></div><div class="car"></div></div>
+                            <div class="comic small-car"><span></span></div>
                             <div><h3>不是只造发动机，而是造整车</h3><p>企业赢在把模型、工具、业务流程和用户体验串起来。Agent、Copilot、企业 AI 应用，拼的是调度与业务适配。</p></div>
                         </div>
                     </div>
