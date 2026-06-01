@@ -1348,6 +1348,33 @@
             cursor: text;
         }
 
+        body.editing [contenteditable="true"] {
+            max-width: 100%;
+            min-width: 8ch;
+            white-space: normal;
+            word-break: keep-all;
+            overflow-wrap: normal;
+        }
+
+        body.editing h1[contenteditable="true"],
+        body.editing h2[contenteditable="true"],
+        body.editing h3[contenteditable="true"],
+        body.editing p[contenteditable="true"] {
+            display: block;
+            min-width: 14ch;
+        }
+
+        body.editing span[contenteditable="true"],
+        body.editing strong[contenteditable="true"],
+        body.editing b[contenteditable="true"] {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+
+        body.editing .nowrap[contenteditable="true"] {
+            white-space: nowrap;
+        }
+
         .edit-hotzone {
             position: fixed;
             top: 0;
@@ -1967,6 +1994,7 @@
 
             toggleEditMode() {
                 this.editMode = !this.editMode;
+                document.body.classList.toggle("editing", this.editMode);
                 document.getElementById("editToggle").classList.toggle("active", this.editMode);
                 document.getElementById("exportButton").classList.toggle("active", this.editMode);
                 document.querySelectorAll("[data-edit-key]").forEach((node) => {
