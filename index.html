@@ -868,6 +868,183 @@
             line-height: 1.34;
         }
 
+        .compute-grid {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: 0.75fr 1fr 1.35fr 1.25fr;
+            border: 1px solid rgba(255, 245, 232, 0.18);
+        }
+
+        .compute-cell {
+            min-height: 108px;
+            padding: 22px 24px;
+            border-right: 1px solid rgba(255, 245, 232, 0.14);
+            border-bottom: 1px solid rgba(255, 245, 232, 0.14);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255, 245, 232, 0.78);
+            font-size: 24px;
+            line-height: 1.25;
+            font-weight: 600;
+        }
+
+        .compute-cell.head {
+            min-height: 62px;
+            background: rgba(255, 90, 31, 0.18);
+            color: var(--cream);
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .compute-cell.side {
+            color: var(--orange);
+            font-family: "Archivo Black", "Noto Sans SC", sans-serif;
+            font-size: 42px;
+            letter-spacing: 0;
+        }
+
+        .compute-cell strong {
+            color: var(--cream);
+            font-size: 28px;
+        }
+
+        .analogy-row {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .comic-card {
+            min-height: 286px;
+            border: 1px solid rgba(255, 90, 31, 0.42);
+            background: rgba(255, 90, 31, 0.08);
+            padding: 28px 30px;
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 28px;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comic-card h3 {
+            font-size: 34px;
+            margin-bottom: 14px;
+        }
+
+        .comic-card p {
+            font-size: 24px;
+            line-height: 1.34;
+        }
+
+        .comic {
+            width: 150px;
+            height: 150px;
+            position: relative;
+        }
+
+        .comic.rider::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 42px;
+            width: 94px;
+            height: 54px;
+            border: 8px solid var(--orange);
+            border-radius: 18px;
+            transform: skewX(-12deg);
+        }
+
+        .comic.rider::after {
+            content: "";
+            position: absolute;
+            left: 20px;
+            bottom: 18px;
+            width: 30px;
+            height: 30px;
+            border: 8px solid var(--cream);
+            border-radius: 50%;
+            box-shadow: 72px 0 0 -8px transparent, 72px 0 0 0 var(--cream);
+        }
+
+        .comic.platform {
+            border: 7px solid var(--orange);
+            border-radius: 30px;
+        }
+
+        .comic.platform::before,
+        .comic.platform::after {
+            content: "";
+            position: absolute;
+            background: var(--cream);
+        }
+
+        .comic.platform::before {
+            left: 34px;
+            top: 32px;
+            width: 72px;
+            height: 7px;
+            box-shadow: 0 34px 0 rgba(255, 245, 232, 0.78), 0 68px 0 rgba(255, 245, 232, 0.56);
+        }
+
+        .comic.platform::after {
+            right: 24px;
+            top: 28px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            box-shadow: -54px 34px 0 var(--orange), -14px 68px 0 var(--orange);
+            background: var(--orange);
+        }
+
+        .engine-car {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .engine {
+            width: 68px;
+            height: 72px;
+            border: 7px solid var(--orange);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .engine::before {
+            content: "";
+            position: absolute;
+            left: -20px;
+            top: 24px;
+            width: 16px;
+            height: 20px;
+            background: var(--orange);
+            box-shadow: 86px 0 0 var(--orange);
+        }
+
+        .car {
+            width: 88px;
+            height: 58px;
+            border: 7px solid var(--cream);
+            border-radius: 34px 34px 16px 16px;
+            position: relative;
+        }
+
+        .car::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            bottom: -24px;
+            width: 22px;
+            height: 22px;
+            background: var(--orange);
+            border-radius: 50%;
+            box-shadow: 46px 0 0 var(--orange);
+        }
+
         .split {
             display: grid;
             grid-template-columns: 0.92fr 1.08fr;
@@ -1275,16 +1452,24 @@
             </section>
 
             <section class="slide">
-                <div class="kicker reveal">Agent Loop</div>
+                <div class="kicker reveal">Compute Shift</div>
                 <div class="slide-number reveal">05</div>
                 <div class="content wide">
-                    <h2 class="reveal" data-edit-key="slide-4-node-0" contenteditable="false">AI Agent 的核心：完整工作闭环</h2>
-                    <p class="lead reveal" data-edit-key="slide-4-node-1" contenteditable="false">它不只是执行单一指令，而是把复杂业务任务变成可持续迭代的闭环流程。</p>
-                    <div class="agent-loop">
-                        <div class="loop-step reveal"><b data-edit-key="slide-4-node-2" contenteditable="false">01</b><h3 data-edit-key="slide-4-node-3" contenteditable="false">理解</h3><p data-edit-key="slide-4-node-4" contenteditable="false">听懂复杂自然语言，识别真实业务意图和核心需求。</p></div>
-                        <div class="loop-step reveal"><b data-edit-key="slide-4-node-5" contenteditable="false">02</b><h3 data-edit-key="slide-4-node-6" contenteditable="false">规划</h3><p data-edit-key="slide-4-node-7" contenteditable="false">把大任务拆成可执行步骤，形成有优先级的行动计划。</p></div>
-                        <div class="loop-step reveal"><b data-edit-key="slide-4-node-8" contenteditable="false">03</b><h3 data-edit-key="slide-4-node-9" contenteditable="false">执行</h3><p data-edit-key="slide-4-node-10" contenteditable="false">调用 API、数据库、浏览器或业务系统，完成具体操作。</p></div>
-                        <div class="loop-step reveal"><b data-edit-key="slide-4-node-11" contenteditable="false">04</b><h3 data-edit-key="slide-4-node-12" contenteditable="false">反馈</h3><p data-edit-key="slide-4-node-13" contenteditable="false">结构化交付结果，并根据反馈动态优化下一轮流程。</p></div>
+                    <h2 class="reveal" data-edit-key="slide-4-node-0" contenteditable="false">AI 竞争正在从“造发动机”走向“造整车”</h2>
+                    <div class="compute-grid reveal">
+                        <div class="compute-cell head">维度</div><div class="compute-cell head">对应比喻</div><div class="compute-cell head">核心能力</div><div class="compute-cell head">行业阶段</div>
+                        <div class="compute-cell side">GPU 侧</div><div class="compute-cell"><strong>发动机 / 算力底座</strong></div><div class="compute-cell">模型训练、大规模并行计算、纯算力竞赛</div><div class="compute-cell">早期 AI：卷参数、卷跑分、卷基础能力</div>
+                        <div class="compute-cell side">CPU 侧</div><div class="compute-cell"><strong>整车架构 / 调度中枢</strong></div><div class="compute-cell">多模型编排、Agent 流程控制、业务逻辑调度、工具链整合</div><div class="compute-cell">当前阶段：卷落地、卷效率、卷业务价值</div>
+                    </div>
+                    <div class="analogy-row">
+                        <div class="comic-card reveal">
+                            <div class="comic rider"></div>
+                            <div><h3>模型像骑手，调度像平台</h3><p>顶级模型已经像“全城都能跑的骑手”。真正拉开差距的是派单算法：顺路拼单、分配商圈、应对爆单。</p></div>
+                        </div>
+                        <div class="comic-card reveal">
+                            <div class="engine-car"><div class="engine"></div><div class="car"></div></div>
+                            <div><h3>不是只造发动机，而是造整车</h3><p>企业赢在把模型、工具、业务流程和用户体验串起来。Agent、Copilot、企业 AI 应用，拼的是调度与业务适配。</p></div>
+                        </div>
                     </div>
                 </div>
             </section>
